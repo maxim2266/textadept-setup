@@ -1,1 +1,1 @@
-Scripts for [Textadept](https://foicica.com/textadept/) editor.
+#### Scripts for [Textadept](https://foicica.com/textadept/) editor.
