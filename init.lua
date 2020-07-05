@@ -38,7 +38,7 @@ local function line_info()
 		i = i - 1
 	end
 
-	return { no = lno, pos = b, len = i - b, full_len = e - b }
+	return { no = lno, pos = b, len = i - b, span = e - b }
 end
 
 local function open_block(fn)
@@ -77,8 +77,8 @@ local function java_open_block()
 	open_block(function(line)
 		buffer:home()
 
-		if line.len < line.full_len then	-- cut trailing whitespace
-			buffer:delete_range(line.pos + line.len, line.full_len - line.len)
+		if line.len < line.span then	-- cut trailing whitespace
+			buffer:delete_range(line.pos + line.len, line.span - line.len)
 		end
 
 		buffer:line_end()
