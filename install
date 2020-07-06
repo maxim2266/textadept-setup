@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+cd "${1:-$HOME/bin}"
+
+ARCHIVE="$(mktemp --tmpdir)"
+
+trap 'rm -f "$ARCHIVE"' EXIT
+trap 'exit 127' HUP INT TERM
+
+rm -rf textadept*
+
+echo "$0: downloading latest version..."
+curl -sS -o "$ARCHIVE" "https://foicica.com/textadept/download/textadept_LATEST.x86_64.tgz"
+
+echo "$0: extracting archive to $PWD ..."
+tar -zxf "$ARCHIVE" --directory .
+
+DIR="$(find . -maxdepth 1 -type d -name 'textadept_*' | sed 's|^\./||')"
+ln -s "$DIR/textadept"
+
+echo "$0: all done."
