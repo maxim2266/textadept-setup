@@ -27,7 +27,7 @@ mkdir -p "$HOME/.local/share/applications"
 
 sed -E	\
 -e "s|^Icon=.+$|Icon=$PWD/$DIR/core/images/textadept.svg|"	\
--e 's/^Exec=.+$/Exec=textadept --nosession %F/'	\
+-e 's/^Exec=.+$/Exec=textadept %F/'	\
 "$DIR/src/textadept.desktop" > "$HOME/.local/share/applications/textadept.desktop"
 
 echo "$0: all done."

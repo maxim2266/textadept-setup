@@ -123,3 +123,17 @@ events.connect(events.LEXER_LOADED, function(lexer)
 		assign_key_handler("s\n", java_open_block)
 	end
 end)
+
+-- we want to preserve only the recent files list, and nothing else
+-- NOTE: for some reason, the recent list gets cleared when invoked like "textadept FILE"
+events.connect(events.QUIT, function()
+	local cmd = [[
+cd "%s" || exit 1
+
+if [ -f session ]; then
+	T="$(mktemp --tmpdir)"
+	grep '^recent:' session > "$T" && mv "$T" session || rm -f "$T"
+fi
+]]
+	assert(os.execute(cmd:format(_USERHOME)))
+end)
