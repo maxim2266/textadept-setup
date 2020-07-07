@@ -17,7 +17,17 @@ curl -sS -o "$ARCHIVE" "https://foicica.com/textadept/download/textadept_LATEST.
 echo "$0: extracting archive to $PWD ..."
 tar -zxf "$ARCHIVE" --directory .
 
+# link to the executable
 DIR="$(find . -maxdepth 1 -type d -name 'textadept_*' | sed 's|^\./||')"
+
 ln -s "$DIR/textadept"
+
+# .desktop file
+mkdir -p "$HOME/.local/share/applications"
+
+sed -E	\
+-e "s|^Icon=.+$|Icon=$PWD/$DIR/core/images/textadept.svg|"	\
+-e 's/^Exec=.+$/Exec=textadept --nosession %F/'	\
+"$DIR/src/textadept.desktop" > "$HOME/.local/share/applications/textadept.desktop"
 
 echo "$0: all done."
