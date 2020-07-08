@@ -14,12 +14,15 @@ keys.cb = function()
 end
 
 -- theme and tweaks
-buffer:set_theme("light", { font = "Liberation Mono", fontsize = 10 })
+if not CURSES then
+	buffer:set_theme("light", { font = "Liberation Mono", fontsize = 10 })
 
-buffer.property["style.default"] = "font:$(font),size:$(fontsize),fore:0x1D1D1D,back:$(color.light_white)"
-
-buffer.caret_line_back = 0xF6F6F6	-- color in "0xBBGGRR" format
-buffer.property["style.type"] = buffer.property["style.keyword"]
+	buffer.property["style.default"] = "font:$(font),size:$(fontsize),fore:0x1D1D1D,back:$(color.light_white)"
+	buffer.caret_line_back = 0xF6F6F6	-- color in "0xBBGGRR" format
+	buffer.property["style.type"] = buffer.property["style.keyword"]
+else
+	--buffer:set_theme("term")
+end
 
 -- Shift+Enter handlers
 local function line_info()
@@ -127,13 +130,20 @@ end)
 -- we want to preserve only the recent files list, and nothing else
 -- NOTE: for some reason, the recent list gets cleared when invoked like "textadept FILE"
 events.connect(events.QUIT, function()
-	local cmd = [[
-cd "%s" || exit 1
+	local sep = WIN32 and "\\" or "/"
+	local session = _USERHOME .. sep .. (CURSES and "session_term" or "session")
+	local buff = {}
 
-if [ -f session ]; then
-	T="$(mktemp --tmpdir)"
-	grep '^recent:' session > "$T" && mv "$T" session || rm -f "$T"
-fi
-]]
-	assert(os.execute(cmd:format(_USERHOME)))
+	-- select only the recent files list
+	for line in io.lines(session) do
+		if line:find("^recent:%s") then
+			table.insert(buff, line)
+		end
+	end
+
+	-- overwrite the session file
+	local file = assert(io.open(session, "w"))
+
+	assert(file:write(table.concat(buff, "\n")))
+	assert(file:close())
 end)
