@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -e
 
 cd "${1:-$HOME/bin}"
 
@@ -11,11 +9,11 @@ trap 'exit 127' HUP INT TERM
 
 rm -rf textadept*
 
-echo "$0: downloading latest version..."
+echo "downloading latest version..."
 curl -sS -o "$ARCHIVE" "https://foicica.com/textadept/download/textadept_LATEST.x86_64.tgz"
 
-echo "$0: extracting archive to $PWD ..."
-tar -zxf "$ARCHIVE" --directory .
+echo "extracting archive to $PWD ..."
+tar -zxf "$ARCHIVE"
 
 # link to the executable
 DIR="$(find . -maxdepth 1 -type d -name 'textadept_*' | sed 's|^\./||')"
@@ -30,4 +28,4 @@ sed -E	\
 -e 's/^Exec=.+$/Exec=textadept %F/'	\
 "$DIR/src/textadept.desktop" > "$HOME/.local/share/applications/textadept.desktop"
 
-echo "$0: all done."
+echo "all done."
