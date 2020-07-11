@@ -127,7 +127,7 @@ events.connect(events.LEXER_LOADED, function(lexer)
 	end
 end)
 
--- we want to preserve only the recent files list, and nothing else
+-- in the default session we only want to preserve the recent files list, and nothing else
 -- NOTE: for some reason, the recent list gets cleared when invoked like "textadept FILE"
 events.connect(events.QUIT, function()
 	local sep = WIN32 and "\\" or "/"

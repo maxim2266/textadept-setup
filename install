@@ -12,7 +12,7 @@ rm -rf textadept*
 echo "downloading latest version..."
 curl -sS -o "$ARCHIVE" "https://foicica.com/textadept/download/textadept_LATEST.x86_64.tgz"
 
-echo "extracting archive to $PWD ..."
+echo "extracting archive to $PWD/ ..."
 tar -zxf "$ARCHIVE"
 
 # link to the executable
@@ -24,8 +24,8 @@ ln -s "$DIR/textadept"
 mkdir -p "$HOME/.local/share/applications"
 
 sed -E	\
--e "s|^Icon=.+$|Icon=$PWD/$DIR/core/images/textadept.svg|"	\
--e 's/^Exec=.+$/Exec=textadept %F/'	\
+-e "s|^Icon=.+\$|Icon=$PWD/$DIR/core/images/textadept.svg|"	\
+-e '/^\s*#.*$/d'	\
 "$DIR/src/textadept.desktop" > "$HOME/.local/share/applications/textadept.desktop"
 
 echo "all done."
